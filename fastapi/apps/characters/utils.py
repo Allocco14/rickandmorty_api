@@ -35,21 +35,20 @@ def get_character_by_id(character_id: int) -> Character | None:
     return data
 
 
-def get_character_by_query(name: str, status: str, species: str, type: str, gender: str) -> List[Character]:
+def get_character_by_query(page: int, name: str, status: str, species: str, type: str, gender: str) -> List[Character]:
     '''
     Function to get characters by query.
     Args:
-        query (str): The query to filter the characters.
+        name (str): The name of the character.
+        status (str): The status of the character.
+        species (str): The species of the character.
+        type (str): The type of the
+        gender (str): The gender of the character.    
     Returns:
         List[Character]: A list of characters that match the query.
-    The query can contain the following:
-        - name: filter by the given name.
-        - status: filter by the given status (alive, dead or unknown).
-        - species: filter by the given species.
-        - type: filter by the given type.
-        - gender: filter by the given gender (female, male, genderless or unknown).
+    
     '''
-    url = f"https://rickandmortyapi.com/api/character/?"
+    url = f"https://rickandmortyapi.com/api/character/?page={page}&"
     try:
         if name:
             url += f"name={name}&"

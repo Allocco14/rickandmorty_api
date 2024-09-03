@@ -27,28 +27,32 @@ def get_character(character_id: int) -> Character:
 
 @router.get("/get_characters_query", tags=["characters"], response_model=List[Character])
 def get_character_query(
+    page: Optional[int] = 1,
     name: Optional[str] = None,
     status: Optional[str] = None,
     species: Optional[str] = None,
     type: Optional[str] = None,
     gender: Optional[str] = None
-    ) -> List[Character]:
-    characters = get_character_by_query(name, status, species, type, gender)
+) -> List[Character]:
+    characters = get_character_by_query(
+        page, name, status, species, type, gender)
     if not characters:
         return JSONResponse(content={"error": "No characters found with the given query."}, status_code=404)
     return characters
 
 
 @router.get("/download_characters", tags=["characters"])
-def download_characters(name: Optional[str] = None,
-                        status: Optional[str] = None,
-                        species: Optional[str] = None,
-                        type: Optional[str] = None,
-                        gender: Optional[str] = None
-                        ) -> StreamingResponse:
+def download_characters(
+    page: Optional[int] = 1,
+    name: Optional[str] = None,
+    status: Optional[str] = None,
+    species: Optional[str] = None,
+    type: Optional[str] = None,
+    gender: Optional[str] = None
+) -> StreamingResponse:
     try:
         characters = get_character_by_query(
-            name, status, species, type, gender)
+            page, name, status, species, type, gender)
 
         if not characters:
             return JSONResponse(content={"error": "No characters found with the given query."}, status_code=404)
@@ -59,6 +63,7 @@ def download_characters(name: Optional[str] = None,
             zip_file.writestr("characters.json", characters_json)
 
         zip_buffer.seek(0)
-        return StreamingResponse(zip_buffer, media_type="application/zip", headers={"Content-Disposition": "attachment; filename=characters.zip"})
+        return StreamingResponse(
+            zip_buffer, media_type="application/zip", headers={"Content-Disposition": "attachment; filename=characters.zip"})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

@@ -35,18 +35,16 @@ def get_episode_by_id(episode_id: int) -> Episode | None:
     return data
 
 
-def get_episode_by_query(name: str, episode: str) -> List[Episode]:
+def get_episode_by_query(page: int, name: str, episode: str) -> List[Episode]:
     '''
     Function to get episodes by query.
     Args:
-        query (str): The query to filter the episodes.
+        name (str): The name of the episode.
+        episode (str): The episode of the episode.
     Returns:
         List[Episode]: A list of episodes that match the query.
-    The query can contain the following:
-        - name: filter by the given name.
-        - episode: filter by the given episode.
     '''
-    url = f"https://rickandmortyapi.com/api/episode/?"
+    url = f"https://rickandmortyapi.com/api/episode/?page={page}&"
     try:
         if name:
             url += f"name={name}&"

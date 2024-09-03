@@ -26,11 +26,12 @@ def get_location(location_id: int) -> Location:
 
 @router.get("/get_locations_query", tags=["locations"], response_model=List[Location])
 def get_location_query(
+        page: Optional[int] = 1,
         name: Optional[str] = None,
         type: Optional[str] = None,
         dimension: Optional[str] = None
     ) -> List[Location]:
-    locations = get_location_by_query(name, type, dimension)
+    locations = get_location_by_query(page, name, type, dimension)
     if not locations:
         return JSONResponse(content={"error": "No locations found with the given query."}, status_code=404)
     return locations
@@ -38,12 +39,13 @@ def get_location_query(
 
 @router.get("/download_locations", tags=["locations"])
 def download_locations(
+        page: Optional[int] = 1,
         name: Optional[str] = None,
         type: Optional[str] = None,
         dimension: Optional[str] = None
     ) -> StreamingResponse:
     try:
-        locations = get_location_by_query(name, type, dimension)
+        locations = get_location_by_query(page, name, type, dimension)
 
         if not locations:
             return JSONResponse(content={"error": "No locations found with the given query."}, status_code=404)

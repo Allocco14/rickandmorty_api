@@ -26,10 +26,11 @@ def get_episode(episode_id: int) -> Episode:
 
 @router.get("/get_episodes_query", tags=["episodes"], response_model=List[Episode])
 def get_episode_query(
-        name: Optional[str] = None,
-        episode: Optional[str] = None,
-    ) -> List[Episode]:
-    episodes = get_episode_by_query(name, episode)
+    page: Optional[int] = 1,
+    name: Optional[str] = None,
+    episode: Optional[str] = None,
+) -> List[Episode]:
+    episodes = get_episode_by_query(page, name, episode)
     if not episodes:
         return JSONResponse(content={"error": "No episodes found with the given query."}, status_code=404)
     return episodes
@@ -37,11 +38,12 @@ def get_episode_query(
 
 @router.get("/download_episodes", tags=["episodes"])
 def download_episodes(
-        name: Optional[str] = None,
-        episode: Optional[str] = None,
-    ) -> StreamingResponse:
+    page: Optional[int] = 1,
+    name: Optional[str] = None,
+    episode: Optional[str] = None,
+) -> StreamingResponse:
     try:
-        episodes = get_episode_by_query(name, episode)
+        episodes = get_episode_by_query(page, name, episode)
 
         if not episodes:
             return JSONResponse(content={"error": "No episodes found with the given query."}, status_code=404)
